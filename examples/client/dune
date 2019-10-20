@@ -1,0 +1,6 @@
+(executable
+   (name Client)
+   (public_name Client.exe)
+   (libraries lib grpc proto) 
+   (preprocess (pps ppx_let))
+)

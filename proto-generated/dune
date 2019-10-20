@@ -1,0 +1,4 @@
+(library
+  (name proto)
+  (libraries lib ocaml-protoc-plugin.protobuf)
+  (flags (-w -40 -w +26)))

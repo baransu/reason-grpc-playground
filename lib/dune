@@ -1,0 +1,5 @@
+(library
+   (name lib)
+   (libraries console.lib base h2 h2-lwt-unix lwt ocaml-protoc-plugin.protobuf)
+   (preprocess (pps ppx_let))
+)

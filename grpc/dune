@@ -1,0 +1,4 @@
+(library
+  (name grpc)
+  (libraries lib proto)
+  (flags (-w -40 -w +26)))

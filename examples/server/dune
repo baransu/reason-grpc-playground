@@ -1,0 +1,6 @@
+(executable
+   (name Server)
+   (public_name Server.exe)
+   (libraries  lib grpc proto) 
+   (preprocess (pps ppx_let))
+)

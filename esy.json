@@ -1,0 +1,28 @@
+{
+  "name": "reason-grpc",
+  "version": "0.1.0",
+  "license": "MIT",
+  "esy": {
+    "build": [["dune", "build", "-p", "#{self.name}"]],
+    "buildsInSource": "_build"
+  },
+  "scripts": {
+    "client": "esy x Client.exe",
+    "server": "esy x Server.exe",
+    "protocGenerate": "make protocGenerate"
+  },
+  "dependencies": {
+    "@opam/ppx_deriving_protobuf": "*",
+    "@opam/base": "*",
+    "@opam/ocaml-protoc-plugin": "*",
+    "@opam/h2": "*",
+    "@opam/h2-lwt-unix": "*",
+    "@opam/dune": "*",
+    "@esy-ocaml/reason": "3.5.2",
+    "@reason-native/console": "*",
+    "@opam/ppx_let": "*"
+  },
+  "devDependencies": {
+    "ocaml": "~4.7.0"
+  }
+}
