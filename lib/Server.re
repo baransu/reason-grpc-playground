@@ -21,6 +21,7 @@ let route =
     |> Utils.decode(Request.from_proto)
     >>= middleware
     >>= Utils.encode(Response.to_proto);
+
   (name, fn);
 };
 
@@ -31,6 +32,7 @@ let headers =
     ("grpc-accept-encoding", "identity"),
     ("content-type", "application/grpc+proto"),
   ]);
+
 let trailer_headers =
   Headers.of_list([("grpc-status", "0"), ("grpc-message", "OK")]);
 
@@ -38,7 +40,7 @@ let trailer_headers =
 let error_handler = (_client_address, ~request as _=?, error, _start_response) =>
   switch (error) {
   | `Bad_request => Console.log("Bad Request")
-  | `Internal_server_error => Console.log("Internal_server_error")
+  | `Internal_server_error => Console.log("Internal Server Error")
   | `Exn(exn) => Console.log(exn)
   };
 
@@ -51,27 +53,32 @@ let create_connection_handler = routes => {
     | Some(route) =>
       let _ = {
         let%map data =
-          Reqd.request_body(request_descriptor)
+          request_descriptor
+          |> Reqd.request_body
           |> Utils.body_to_string
           >>= route;
 
-        let response = Response.create(~headers, `OK);
         let response_body =
-          Reqd.respond_with_streaming(request_descriptor, response);
+          Response.create(~headers, `OK)
+          |> Reqd.respond_with_streaming(request_descriptor);
+
         Body.write_string(response_body, data);
-        // Reqd.send_trailer_headers(request_descriptor, trailer_headers);
+        Reqd.send_trailer_headers(request_descriptor, trailer_headers);
         Body.close_writer(response_body);
       };
       ();
+
     | None => Console.log("Sorry bro, I don't know what you're trying to do")
     };
   };
+
   H2_lwt_unix.Server.create_connection_handler(
     ~config=H2.Config.default,
     ~request_handler,
     ~error_handler,
   );
 };
+
 let socket_listen = (host, port, connection_handler) => {
   let%bind address = Utils.find_address(host, port);
   let%map _servefr =

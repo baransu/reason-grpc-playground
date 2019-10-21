@@ -12,16 +12,21 @@ let create_socket = (host, port) => {
 
   socket;
 };
-// TODO: default error_handler
-let error_handler = Console.log;
 
-// TODO: allow overwrite
+// TODO: default error_handler
+let error_handler = error => {
+  // TODO: handle http2 RST_STREAM
+  Console.log("error handler");
+  Console.log(error);
+};
+
+// TODO: allow options
 let create_headers = host =>
   Headers.of_list([
     (":authority", host),
     ("te", "trailers"),
     // TODO: timeout
-    // ("grpc-timeout", ""),
+    ("grpc-timeout", "1S"),
     ("content-type", "application/grpc+proto"),
     ("grpc-encoding", "identity"),
     ("grpc-accept-encoding", "identity"),
@@ -53,7 +58,7 @@ let h2_request = (client, path, data) => {
 
   let headers = create_headers(client.host);
 
-  let request = Request.create(`POST, ~scheme="https", path, ~headers);
+  let request = Request.create(`POST, ~scheme="http", path, ~headers);
   let request_body =
     Client.request(
       client.connection,

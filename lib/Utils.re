@@ -13,6 +13,7 @@ let find_address = (host, port) => {
   | None => Lwt.fail_with("Address not found")
   };
 };
+
 let body_to_string = body => {
   let (data_received, notify_data_received) = Lwt.wait();
   let rec read_response = string =>
@@ -27,6 +28,7 @@ let body_to_string = body => {
   read_response("");
   data_received;
 };
+
 let create_header = body => {
   let int_to_bytes = t =>
     Int.(
@@ -49,6 +51,7 @@ let encode = (encode_fn, message) => {
 
   header ++ body |> Lwt.return;
 };
+
 let decode = (decode_fn, bytes) => {
   // header size
   let offset = 5;
